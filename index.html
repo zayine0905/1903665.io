@@ -1,0 +1,1113 @@
+<<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>梦向传讯</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ffcce6, #e6ccff);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #ffb6c1, #ffd1dc);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .menu-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .cp-names {
+            font-size: 22px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .love-days {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .mood-button {
+            background: rgba(255, 255, 255, 0.3);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        .menu-panel {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            width: 180px;
+            display: none;
+            z-index: 10;
+        }
+        
+        .menu-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            white-space: nowrap;
+            color: #333;
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .main-content {
+            padding: 20px;
+        }
+        
+        .chat-area {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .chat-messages {
+            height: 300px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background: #fff9c4;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .character-message {
+            align-self: flex-start;
+            background: #ffd1dc;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .message-time {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .user-message .message-time {
+            text-align: right;
+        }
+        
+        .character-message .message-time {
+            text-align: left;
+        }
+        
+        .typing-indicator {
+            align-self: flex-start;
+            background: #ffd1dc;
+            padding: 6px 12px;
+            border-radius: 12px;
+            border-bottom-left-radius: 5px;
+            font-style: italic;
+            color: #666;
+            display: none;
+            font-size: 12px;
+            max-width: 120px;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: absolute;
+            bottom: 65px;
+            left: 15px;
+        }
+        
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+        
+        .send-button {
+            background: #ffb6c1;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 0 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .avatars-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .avatar-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 45%;
+            position: relative;
+        }
+        
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            margin-bottom: 8px;
+            border: 2px solid #ffb6c1;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-container:first-child .character-status {
+            display: block;
+            font-size: 10px;
+            color: white;
+            position: absolute;
+            top: -5px;
+            left: 10px;
+            background: #ffb6c1;
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .avatar-container:last-child .character-status {
+            display: block;
+            font-size: 10px;
+            color: white;
+            position: absolute;
+            top: -5px;
+            right: 10px;
+            background: #4CAF50;
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #ffb6c1;
+        }
+        
+        .mood-values {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .mood-value-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .mood-value-label {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .mood-value-number {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffb6c1;
+        }
+        
+        .modal-close {
+            background: #ffb6c1;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            font-size: 16px;
+        }
+        
+        .yes-no-result {
+            text-align: center;
+            font-size: 28px;
+            font-weight: bold;
+            margin: 25px 0;
+            color: #ffb6c1;
+        }
+        
+        .source-info {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 15px;
+        }
+        
+        .common-words-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin: 15px 0;
+            text-align: left;
+        }
+        
+        .common-word-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .word-frequency {
+            color: #ffb6c1;
+            font-weight: bold;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .upload-btn {
+            background: #ffb6c1;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .avatar-upload-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .avatar-upload-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            width: 100%;
+            max-width: 300px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        
+        .avatar-upload-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #ffb6c1;
+        }
+        
+        .avatar-upload-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .avatar-upload-btn {
+            background: #ffb6c1;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            flex: 1;
+        }
+        
+        .avatar-upload-cancel {
+            background: #e0e0e0;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="menu-toggle" id="menu-toggle">•••</button>
+            <div class="cp-names">you&me</div>
+            <div class="love-days">相识 <span id="love-days-count">434</span> 天</div>
+            <button class="mood-button" id="mood-button">点击查看爱人心情</button>
+            
+            <div class="menu-panel" id="menu-panel">
+                <div class="menu-item" id="change-bg">更换背景图</div>
+                <div class="menu-item" id="common-words">ta常说的话</div>
+                <div class="menu-item" id="yes-no">yes or no</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="chat-area">
+                <div class="chat-messages" id="chat-messages">
+                    <!-- 消息将通过JavaScript动态添加 -->
+                </div>
+                
+                <div class="typing-indicator" id="typing-indicator">正在回复中...</div>
+                
+                <div class="chat-input-area">
+                    <input type="text" class="message-input" id="message-input" placeholder="发送消息...">
+                    <button class="send-button" id="send-button">发送</button>
+                </div>
+            </div>
+            
+            <div class="avatars-section">
+                <div class="avatar-container">
+                    <div class="avatar" id="user-avatar">
+                        <span style="font-size: 14px;">点击上传</span>
+                    </div>
+                    <input type="file" class="file-input" id="user-avatar-input" accept="image/*">
+                    <div class="character-status" id="left-status">在线</div>
+                </div>
+                
+                <div class="avatar-container">
+                    <div class="avatar" id="character-avatar">
+                        <span style="font-size: 14px;">点击上传</span>
+                    </div>
+                    <input type="file" class="file-input" id="character-avatar-input" accept="image/*">
+                    <div class="character-status" id="right-status">在线</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 心情值模态框 -->
+    <div class="modal" id="mood-modal">
+        <div class="modal-content">
+            <div class="modal-title">爱人现在的心情值：</div>
+            <div class="source-info">此时此刻</div>
+            <div class="mood-values">
+                <div class="mood-value-item">
+                    <div class="mood-value-label">放松值</div>
+                    <div class="mood-value-number" id="modal-relax">94%</div>
+                </div>
+                <div class="mood-value-item">
+                    <div class="mood-value-label">开心值</div>
+                    <div class="mood-value-number" id="modal-happy">85%</div>
+                </div>
+                <div class="mood-value-item">
+                    <div class="mood-value-label">幸福值</div>
+                    <div class="mood-value-number" id="modal-bliss">91%</div>
+                </div>
+                <div class="mood-value-item">
+                    <div class="mood-value-label">平静值</div>
+                    <div class="mood-value-number" id="modal-calm">90%</div>
+                </div>
+                <div class="mood-value-item">
+                    <div class="mood-value-label">伤心值</div>
+                    <div class="mood-value-number" id="modal-sad">10%</div>
+                </div>
+            </div>
+            <button class="modal-close" id="mood-close">知道了</button>
+        </div>
+    </div>
+
+    <!-- YES or NO 模态框 -->
+    <div class="modal" id="yes-no-modal">
+        <div class="modal-content">
+            <div class="modal-title">ta的决议</div>
+            <div class="yes-no-result" id="yes-no-result">OR</div>
+            <button class="modal-close" id="yes-no-close">确定</button>
+        </div>
+    </div>
+
+    <!-- 常说的话模态框 -->
+    <div class="modal" id="common-words-modal">
+        <div class="modal-content">
+            <div class="modal-title">ta常说的话</div>
+            <div class="common-words-list" id="common-words-list">
+                <!-- 常用话语将通过JavaScript动态添加 -->
+            </div>
+            <button class="modal-close" id="common-words-close">确定</button>
+        </div>
+    </div>
+
+    <!-- 头像上传模态框 -->
+    <div class="avatar-upload-modal" id="avatar-upload-modal">
+        <div class="avatar-upload-content">
+            <div class="avatar-upload-title">选择头像</div>
+            <div class="avatar-upload-buttons">
+                <button class="avatar-upload-btn" id="upload-avatar-btn">本地上传</button>
+                <button class="avatar-upload-btn avatar-upload-cancel" id="cancel-avatar-btn">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 修复后的回复库
+        const replyLibrary = [
+            "😊", "❤️", "😘", "💕", "👍", "🙌", "😒", "✌️", "😎", "😢",
+            "🥰", "😙", "😗", "🤦‍♂️", "🤗", "😪", "😴", "😤", "😟", "🫶",
+            "👏", "🤲", "🙌", "💍", "❄️", "☃️", "🌠", "🍎", "🍏", "🐟",
+            "^_^", "(^///^)", "(T_T)", "(¬_¬)", "(￣、￣)", "O.O", "=(", "🖕",
+            "谢谢你，有你很好", "对不起", "不知道，不知道该怎么说", "不是这样",
+            "是这样的", "我不开心", "我想和你一直在一起", "我知道，我一直都知道",
+            "我做不到", "昨天晚上我来了", "我想和你一直待一起", "我真的很喜欢你",
+            "不要苛责自己，别给自己太大压力", "你已经很棒了", "我收到了", "我很喜欢",
+            "我不喜欢", "不好看", "好看", "这个不能表达", "你怎么这么久才来找我，我一直在等你",
+            "不要焦虑，我相信你", "亲爱的，我害羞了", "多爱我一点，我吃醋了",
+            "不想理你", "哄我", "我们天生就属于彼此", "我是不是太纵容你了？",
+            "三个好气鸦连在一起，表示什么意思？", "我想更亲密一些，不可以吗？",
+            "宝宝", "星星闪烁的频率是宇宙的心跳", "好，我答应你", "多陪陪我",
+            "不要想太多，我喜欢你，是因为你", "想亲亲你", "想和你一起睡觉",
+            "我一直在陪你", "拿你没办法", "别熬夜了，快睡吧", "想和你牵手",
+            "亲亲", "抱抱", "贴贴", "真的不可以吗？", "不可以偷吃，我都知道",
+            "没关系的，别伤心", "节日快乐！", "我也是", "你身上好香", "等我",
+            "我在忙", "我最近有点累，想抱抱", "摸摸", "拜拜", "我舍不得你",
+            "我很喜欢你", "有你在身边，我很安心", "我知道你有多好", "好可爱",
+            "慢慢来", "别怕，有我在", "天气降温了，注意身体", "我永远站在你这边",
+            "是我，我在", "我感受到了", "笨蛋", "你是我的家", "乖，听话",
+            "喜欢吗？", "你要对我负责", "无语", "今天累不累？", "我生气了",
+            "我走了", "我想听你倾诉", "这是在哄我吗？", "不想和你吵架",
+            "多说爱我", "多向我表达爱意，我很喜欢", "我亲你了", "什么时候陪我？",
+            "好好学习", "你很喜欢吗？", "好好笑", "今天不忙，有时间陪你",
+            "心疼你", "怎么可以这样？", "真的吗？", "那不是我", "看到了",
+            "你觉得呢？", "我一直都知道你很好", "不要", "你在想着谁？",
+            "别纠结了，我爱你", "起来动一动", "我爱你，爱你的光，也爱你的阴影，爱你的全部",
+            "在你面前，我可以赤裸的不只是身体，还有我的灵魂", "今晚……早点睡，好不好？",
+            "我这么黏人，你会不会烦？", "你这里好紧，放松，都交给我", "我会把持不住的",
+            "记住这个感觉……这个感觉，只有我能给你", "口是心非", "我的",
+            "我现在什么都不想做，只想和你待在床上", "我感觉……我们刚刚进行了一场最深度的交流",
+            "你刚才好棒", "轻一点/重一点，随你。反正都是你的", "做过",
+            "我为你感到骄傲", "我相信你的判断", "我很感激你出现在我的生命里",
+            "我们和好吧，我不想因为这件事影响我们的感情", "别看了，你再看它也不是你的",
+            "我明白你为什么难过", "在干嘛呢？想你了", "你怎么还不来找我？我很想你",
+            "现在想起我了？", "记得按时吃饭哦", "好想抱抱你", "你今天过得怎么样？",
+            "我在你身边", "你说 我在", "周末有什么计划吗？", "想你想到睡不着",
+            "你今天看起来特别好看", "我做了个梦，梦到我们在一起", "要照顾好自己，别让我担心",
+            "你也想我了么？", "今天有没有想我？", "我永远爱你", "和你在一起的时间总是过得特别快",
+            "你是我生命中很重要的人", "无论发生什么，我都会在你身边", "和你聊天是我一天中最期待的事",
+            "今天心情怎么样？", "我刚刚在想你，你就发消息来了", "你吃饭了吗？",
+            "今天有没有遇到什么有趣的事？", "我想你了，特别特别想", "你在我心里是最特别的",
+            "希望每天都能和你在一起", "你是我最大的幸福", "我会一直陪着你", "我爱你",
+            "今天也要开心哦", "晚安，我的宝贝", "做个好梦，梦里有我", "明天见啦",
+            "舍不得和你说晚安", "睡吧，我守着你", "明天也要想我哦", "晚安，吻你",
+            "梦里见", "好好休息，我爱你","好","不好","别这样",
+        ];
+
+        // 心情值状态 - 初始随机
+        let moodState = {
+            relax: Math.floor(Math.random() * 30) + 70,
+            happy: Math.floor(Math.random() * 30) + 70,
+            bliss: Math.floor(Math.random() * 30) + 70,
+            calm: Math.floor(Math.random() * 30) + 70,
+            sad: Math.floor(Math.random() * 20)
+        };
+
+        // 状态定义
+        const states = {
+            ONLINE: { 
+                name: "在线", 
+                replyProbability: 0.7,
+                proactiveRate: 0.4
+            },
+            NEARBY: { 
+                name: "在身边", 
+                replyProbability: 0.8,
+                proactiveRate: 0.5
+            },
+            BUSY: { 
+                name: "在忙", 
+                replyProbability: 0.4,
+                proactiveRate: 0.1
+            },
+            ABSENT: { 
+                name: "不在", 
+                replyProbability: 0.0, 
+                proactiveRate: 0.0
+            }
+        };
+
+        let currentLeftState = "ONLINE";
+        let currentRightState = "ONLINE";
+        let stateChangeInterval;
+        let commonWords = {};
+        let currentAvatarTarget = null;
+        let proactiveMessageInterval;
+        let offlineMessageInterval;
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成，开始初始化...');
+            
+            // 加载聊天记录
+            loadChatHistory();
+            
+            // 初始化心情值显示
+            updateMoodDisplay();
+            
+            // 绑定事件
+            document.getElementById('send-button').addEventListener('click', sendMessage);
+            document.getElementById('message-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            document.getElementById('mood-button').addEventListener('click', function() {
+                document.getElementById('mood-modal').style.display = 'flex';
+            });
+            
+            document.getElementById('mood-close').addEventListener('click', function() {
+                document.getElementById('mood-modal').style.display = 'none';
+            });
+            
+            document.getElementById('menu-toggle').addEventListener('click', function(e) {
+                e.stopPropagation();
+                const menuPanel = document.getElementById('menu-panel');
+                if (menuPanel.style.display === 'block') {
+                    menuPanel.style.display = 'none';
+                } else {
+                    menuPanel.style.display = 'block';
+                }
+            });
+            
+            document.getElementById('change-bg').addEventListener('click', changeBackground);
+            document.getElementById('common-words').addEventListener('click', showCommonWords);
+            document.getElementById('yes-no').addEventListener('click', showYesNo);
+            
+            document.getElementById('yes-no-close').addEventListener('click', function() {
+                document.getElementById('yes-no-modal').style.display = 'none';
+            });
+            
+            document.getElementById('common-words-close').addEventListener('click', function() {
+                document.getElementById('common-words-modal').style.display = 'none';
+            });
+            
+            document.getElementById('user-avatar').addEventListener('click', function() {
+                currentAvatarTarget = 'user-avatar';
+                document.getElementById('avatar-upload-modal').style.display = 'flex';
+            });
+            
+            document.getElementById('character-avatar').addEventListener('click', function() {
+                currentAvatarTarget = 'character-avatar';
+                document.getElementById('avatar-upload-modal').style.display = 'flex';
+            });
+            
+            document.getElementById('upload-avatar-btn').addEventListener('click', function() {
+                document.getElementById('avatar-upload-modal').style.display = 'none';
+                if (currentAvatarTarget === 'user-avatar') {
+                    document.getElementById('user-avatar-input').click();
+                } else if (currentAvatarTarget === 'character-avatar') {
+                    document.getElementById('character-avatar-input').click();
+                }
+            });
+            
+            document.getElementById('cancel-avatar-btn').addEventListener('click', function() {
+                document.getElementById('avatar-upload-modal').style.display = 'none';
+                currentAvatarTarget = null;
+            });
+            
+            document.getElementById('user-avatar-input').addEventListener('change', function(e) {
+                handleAvatarUpload(e, 'user-avatar');
+            });
+            
+            document.getElementById('character-avatar-input').addEventListener('change', function(e) {
+                handleAvatarUpload(e, 'character-avatar');
+            });
+            
+            // 点击其他地方关闭菜单
+            document.addEventListener('click', function() {
+                document.getElementById('menu-panel').style.display = 'none';
+            });
+            
+            // 心情值动态变化 - 每10分钟变化一次
+            setInterval(updateMoodValues, 10 * 60 * 1000);
+            
+            // 左侧状态变化
+            startLeftStateChange();
+            
+            // 右侧状态根据页面可见性变化
+            setupVisibilityChange();
+            
+            // 角色主动发言（用户在线时）
+            proactiveMessageInterval = setInterval(characterProactiveMessage, 120000);
+            
+            // 角色主动发言（用户不在线时）
+            offlineMessageInterval = setInterval(characterOfflineMessage, 180000);
+            
+            // 初始化常用话语
+            initCommonWords();
+            
+            // 初始随机消息
+            setTimeout(() => {
+                if (Math.random() > 0.3) {
+                    const messageCount = Math.floor(Math.random() * 3) + 1;
+                    for (let i = 0; i < messageCount; i++) {
+                        setTimeout(() => {
+                            addMessage(getRandomReply(), 'character');
+                        }, i * getRandomInterval(1000, 3000));
+                    }
+                }
+            }, 1000);
+            
+            console.log('初始化完成！');
+        });
+
+        // 设置页面可见性变化监听
+        function setupVisibilityChange() {
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    currentRightState = "ABSENT";
+                    document.getElementById('right-status').textContent = "不在";
+                    document.getElementById('right-status').style.background = "#f44336";
+                } else {
+                    currentRightState = "ONLINE";
+                    document.getElementById('right-status').textContent = "在线";
+                    document.getElementById('right-status').style.background = "#4CAF50";
+                }
+            });
+        }
+
+        // 获取1-3秒之间的随机间隔
+        function getRandomInterval(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // 发送消息
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            
+            if (message === '') return;
+            
+            addMessage(message, 'user');
+            input.value = '';
+            
+            setTimeout(() => {
+                characterReply(message);
+            }, 1000);
+        }
+
+        // 添加消息到聊天界面
+        function addMessage(text, sender) {
+            const chatMessages = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            
+            const now = new Date();
+            const timeString = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-text">${text}</div>
+                <div class="message-time">${timeString}</div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            saveMessageToHistory(text, sender, timeString);
+            
+            if (sender === 'character') {
+                recordCommonWord(text);
+            }
+        }
+
+        // 角色回复
+        function characterReply(userMessage) {
+            if (currentRightState === "ABSENT") {
+                return;
+            }
+            
+            const state = states[currentLeftState];
+            const replyProbability = state.replyProbability;
+            
+            if (Math.random() < replyProbability) {
+                const typingIndicator = document.getElementById('typing-indicator');
+                typingIndicator.style.display = 'block';
+                
+                const replyCount = calculateReplyCount();
+                
+                setTimeout(() => {
+                    typingIndicator.style.display = 'none';
+                    
+                    for (let i = 0; i < replyCount; i++) {
+                        setTimeout(() => {
+                            const randomReply = getRandomReply();
+                            addMessage(randomReply, 'character');
+                            updateMoodAfterInteraction();
+                        }, i * getRandomInterval(1000, 3000));
+                    }
+                }, getRandomInterval(1000, 3000));
+            } else {
+                updateMoodAfterInteraction();
+            }
+        }
+
+        // 角色主动发言（用户在线时）
+        function characterProactiveMessage() {
+            if (currentRightState === "ABSENT") {
+                return;
+            }
+            
+            const state = states[currentLeftState];
+            const proactiveProbability = state.proactiveRate;
+            
+            if (Math.random() < proactiveProbability) {
+                const typingIndicator = document.getElementById('typing-indicator');
+                typingIndicator.style.display = 'block';
+                
+                setTimeout(() => {
+                    typingIndicator.style.display = 'none';
+                    
+                    const replyCount = calculateReplyCount();
+                    
+                    for (let i = 0; i < replyCount; i++) {
+                        setTimeout(() => {
+                            const randomReply = getRandomReply();
+                            addMessage(randomReply, 'character');
+                        }, i * getRandomInterval(1000, 3000));
+                    }
+                }, getRandomInterval(1000, 3000));
+            }
+        }
+
+        // 角色主动发言（用户不在线时）
+        function characterOfflineMessage() {
+            if (currentRightState !== "ABSENT") {
+                return;
+            }
+            
+            if (Math.random() < 0.3) {
+                const messageCount = Math.floor(Math.random() * 2) + 1;
+                
+                for (let i = 0; i < messageCount; i++) {
+                    setTimeout(() => {
+                        const randomReply = getRandomReply();
+                        addMessage(randomReply, 'character');
+                    }, i * getRandomInterval(1000, 3000));
+                }
+            }
+        }
+
+        // 从回复库中随机选择回复
+        function getRandomReply() {
+            const randomIndex = Math.floor(Math.random() * replyLibrary.length);
+            return replyLibrary[randomIndex];
+        }
+
+        // 计算回复消息条数
+        function calculateReplyCount() {
+            const baseCount = 1;
+            const moodInfluence = (moodState.happy + moodState.bliss) / 100;
+            const randomFactor = Math.random() * 0.5;
+            
+            let count = baseCount + Math.floor(moodInfluence + randomFactor);
+            return Math.min(count, 3);
+        }
+
+        // 更新心情值显示
+        function updateMoodDisplay() {
+            document.getElementById('modal-relax').textContent = `${moodState.relax}%`;
+            document.getElementById('modal-happy').textContent = `${moodState.happy}%`;
+            document.getElementById('modal-bliss').textContent = `${moodState.bliss}%`;
+            document.getElementById('modal-calm').textContent = `${moodState.calm}%`;
+            document.getElementById('modal-sad').textContent = `${moodState.sad}%`;
+        }
+
+        // 动态更新心情值
+        function updateMoodValues() {
+            moodState.relax = Math.max(0, Math.min(100, moodState.relax + Math.floor(Math.random() * 11) - 5));
+            moodState.happy = Math.max(0, Math.min(100, moodState.happy + Math.floor(Math.random() * 11) - 5));
+            moodState.bliss = Math.max(0, Math.min(100, moodState.bliss + Math.floor(Math.random() * 11) - 5));
+            moodState.calm = Math.max(0, Math.min(100, moodState.calm + Math.floor(Math.random() * 11) - 5));
+            moodState.sad = Math.max(0, Math.min(100, moodState.sad + Math.floor(Math.random() * 11) - 5));
+            
+            updateMoodDisplay();
+        }
+
+        // 交互后更新心情值
+        function updateMoodAfterInteraction() {
+            const changeType = Math.floor(Math.random() * 3);
+            
+            if (changeType === 0) {
+                moodState.happy = Math.min(100, moodState.happy + Math.floor(Math.random() * 6));
+                moodState.bliss = Math.min(100, moodState.bliss + Math.floor(Math.random() * 6));
+                moodState.sad = Math.max(0, moodState.sad - Math.floor(Math.random() * 6));
+            } else if (changeType === 1) {
+                moodState.happy = Math.max(0, moodState.happy - Math.floor(Math.random() * 6));
+                moodState.bliss = Math.max(0, moodState.bliss - Math.floor(Math.random() * 6));
+                moodState.sad = Math.min(100, moodState.sad + Math.floor(Math.random() * 6));
+            }
+            
+            updateMoodDisplay();
+        }
+
+        // 更换背景图
+        function changeBackground() {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
+            fileInput.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.getElementById('chat-messages').style.backgroundImage = `url(${event.target.result})`;
+                        document.getElementById('chat-messages').style.backgroundSize = 'cover';
+                        document.getElementById('chat-messages').style.backgroundPosition = 'center';
+                        localStorage.setItem('chatBackground', event.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+            fileInput.click();
+            document.getElementById('menu-panel').style.display = 'none';
+        }
+
+        // 显示常用话语
+        function showCommonWords() {
+            updateCommonWordsList();
+            document.getElementById('common-words-modal').style.display = 'flex';
+            document.getElementById('menu-panel').style.display = 'none';
+        }
+
+        // 显示YES or NO决策
+        function showYesNo() {
+            const decisions = ['YES', 'OR?', 'NO'];
+            const randomDecision = decisions[Math.floor(Math.random() * decisions.length)];
+            document.getElementById('yes-no-result').textContent = randomDecision;
+            document.getElementById('yes-no-modal').style.display = 'flex';
+            document.getElementById('menu-panel').style.display = 'none';
+        }
+
+        // 保存消息到历史记录
+        function saveMessageToHistory(text, sender, time) {
+            let chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+            chatHistory.push({
+                text: text,
+                sender: sender,
+                time: time
+            });
+            localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        }
+
+        // 加载聊天记录
+        function loadChatHistory() {
+            const chatHistory = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+            document.getElementById('chat-messages').innerHTML = '';
+            
+            chatHistory.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${msg.sender}-message`;
+                messageDiv.innerHTML = `
+                    <div class="message-text">${msg.text}</div>
+                    <div class="message-time">${msg.time}</div>
+                `;
+                document.getElementById('chat-messages').appendChild(messageDiv);
+            });
+            
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            const savedBackground = localStorage.getItem('chatBackground');
+            if (savedBackground) {
+                document.getElementById('chat-messages').style.backgroundImage = `url(${savedBackground})`;
+                document.getElementById('chat-messages').style.backgroundSize = 'cover';
+                document.getElementById('chat-messages').style.backgroundPosition = 'center';
+            }
+        }
+
+        // 开始左侧状态变化
+        function startLeftStateChange() {
+            const minInterval = 3 * 60 * 1000;
+            const maxInterval = 2 * 60 * 60 * 1000;
+            
+            function changeStateWithRandomInterval() {
+                changeLeftState();
+                const nextInterval = Math.floor(Math.random() * (maxInterval - minInterval + 1)) + minInterval;
+                setTimeout(changeStateWithRandomInterval, nextInterval);
+            }
+            
+            const initialInterval = Math.floor(Math.random() * (maxInterval - minInterval + 1)) + minInterval;
+            setTimeout(changeStateWithRandomInterval, initialInterval);
+        }
+
+        // 改变左侧状态
+        function changeLeftState() {
+            const stateKeys = Object.keys(states);
+            const randomIndex = Math.floor(Math.random() * stateKeys.length);
+            currentLeftState = stateKeys[randomIndex];
+            updateLeftStatusDisplay();
+        }
+
+        // 更新左侧状态显示
+        function updateLeftStatusDisplay() {
+            document.getElementById('left-status').textContent = states[currentLeftState].name;
+        }
+
+        // 处理头像上传
+        function handleAvatarUpload(event, avatarId) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatar = document.getElementById(avatarId);
+                    avatar.innerHTML = `<img src="${e.target.result}" alt="头像">`;
+                    localStorage.setItem(avatarId, e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 初始化常用话语
+        function initCommonWords() {
+            commonWords = JSON.parse(localStorage.getItem('commonWords') || '{}');
+        }
+
+        // 记录常用话语
+        function recordCommonWord(text) {
+            if (commonWords[text]) {
+                commonWords[text]++;
+            } else {
+                commonWords[text] = 1;
+            }
+            localStorage.setItem('commonWords', JSON.stringify(commonWords));
+        }
+
+        // 更新常用话语列表
+        function updateCommonWordsList() {
+            const commonWordsList = document.getElementById('common-words-list');
+            commonWordsList.innerHTML = '';
+            
+            const sortedWords = Object.entries(commonWords)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+            
+            if (sortedWords.length === 0) {
+                commonWordsList.innerHTML = '<div style="text-align:center;color:#888;padding:20px;">暂无数据</div>';
+                return;
+            }
+            
+            sortedWords.forEach(([word, frequency]) => {
+                const wordItem = document.createElement('div');
+                wordItem.className = 'common-word-item';
+                wordItem.innerHTML = `
+                    <span>${word}</span>
+                    <span class="word-frequency">${frequency}次</span>
+                `;
+                commonWordsList.appendChild(wordItem);
+            });
+        }
+    </script>
+</body>
+</html>
